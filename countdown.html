@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buffet Countdown</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      animation: gradientBG 6s ease infinite;
+      background: linear-gradient(-45deg, #ff4e50, #f9d423, #24c6dc, #514a9d);
+      background-size: 400% 400%;
+      color: white;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 50px;
+      flex-wrap: wrap;
+    }
+
+    .title {
+      font-size: 4vw;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      font-size: 2.5vw;
+      margin-top: 10px;
+    }
+
+    .price {
+      font-size: 3.5vw;
+      font-weight: bold;
+      color: #ffc300;
+      margin-top: 15px;
+    }
+
+    .timer {
+      font-size: 5vw;
+      font-weight: bold;
+    }
+
+    .blink {
+      animation: blink-animation 1s steps(2, start) infinite;
+    }
+
+    @keyframes blink-animation {
+      to { visibility: hidden; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <div class="title">LIMITED-TIME BUFFET</div>
+      <div class="subtitle">LUNCH SPECIAL</div>
+      <div class="price">RM 39.9</div>
+    </div>
+    <div class="right">
+      <div id="countdown" class="timer"></div>
+    </div>
+  </div>
+
+  <script>
+    function startCountdown() {
+      const endTime = new Date();
+      endTime.setHours(15, 0, 0, 0); // 15:00:00
+
+      function updateTimer() {
+        const now = new Date();
+        let diff = endTime - now;
+
+        if (diff <= 0) {
+          document.getElementById("countdown").textContent = "00:00:00";
+          clearInterval(timerInterval);
+          return;
+        }
+
+        const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, "0");
+        const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, "0");
+        const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
+
+        const countdownEl = document.getElementById("countdown");
+        countdownEl.textContent = `${hours}:${minutes}:${seconds}`;
+
+        // 最后 10 分钟闪烁
+        if (diff <= 10 * 60 * 1000) {
+          countdownEl.classList.add("blink");
+        } else {
+          countdownEl.classList.remove("blink");
+        }
+      }
+
+      updateTimer();
+      const timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    startCountdown();
+  </script>
+</body>
+</html>
